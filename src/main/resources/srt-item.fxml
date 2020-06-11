@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+
+<BorderPane fx:id="btnGroup" prefHeight="244.0" prefWidth="475.0" BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+    <center>
+        <Pane prefHeight="244.0" prefWidth="476.0">
+
+                <Label fx:id="order" layoutX="22.0" layoutY="18.0" text="1" />
+                <TextField fx:id="startsAt" layoutX="21.0" layoutY="39.0" prefHeight="25.0" prefWidth="127.0" />
+                <TextField fx:id="endsAt" layoutX="197.0" layoutY="39.0" prefHeight="25.0" prefWidth="119.0" />
+                <Label layoutX="168.0" layoutY="43.0" text="--&gt;" />
+                <TextArea fx:id="text" layoutX="20.0" layoutY="79.0" prefHeight="154.0" prefWidth="446.0" />
+
+        </Pane>
+    </center>
+    <bottom> <Line endX="315.20001220703125" layoutX="148.0" layoutY="14.0" startX="-129.76560974121094" />
+    </bottom>
+</BorderPane>
