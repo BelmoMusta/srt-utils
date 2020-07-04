@@ -21,24 +21,35 @@
                     </BorderPane.margin>
                 </Button>
             </right>
-         <center>
-            <Button fx:id="excelButton" mnemonicParsing="false" text="EXCEL" BorderPane.alignment="CENTER" />
-         </center>
         </BorderPane>
     </top>
 
         <ScrollPane fx:id="scrollPane" />
-    <BorderPane fx:id="container" prefHeight="308.0" prefWidth="461.0" BorderPane.alignment="CENTER" />
     <center>
-        <GridPane fx:id="grid" prefHeight="425.0" prefWidth="593.0" BorderPane.alignment="CENTER">
-            <columnConstraints>
+            <BorderPane fx:id="container" prefHeight="400" prefWidth="400" BorderPane.alignment="CENTER">
+            <left>
+                <HBox fx:id="leftSide">
+
+                </HBox>
+            </left>
+            <right>
+                <HBox fx:id="rightSide">
+
+                </HBox>
+
+            </right>
+         <center>
+            <GridPane fx:id="grid" BorderPane.alignment="CENTER">
+              <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            </columnConstraints>
-            <rowConstraints>
+              </columnConstraints>
+              <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            </rowConstraints>
-        </GridPane>
+                </rowConstraints>
+            </GridPane>
+         </center>
+            </BorderPane>
     </center>
 
 </BorderPane>

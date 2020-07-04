@@ -6,8 +6,7 @@ import lombok.Setter;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,9 +15,29 @@ import java.util.regex.Pattern;
 
 public class SrtItem implements Comparable<SrtItem> {
     public static final String REGEX = "(\\d+)\\r?\\n(\\d{2}:\\d{2}:\\d{2},\\d{3}) --> (\\d{2}:\\d{2}:\\d{2},\\d{3})\\r?\\n(.+)";
+    public static final Function<String, SrtItem> STRING_MAPPER = SrtItem::new;
+
     private int order;
     private TimeMarker timeMarker;
     private String text;
+
+    public SrtItem() {
+    }
+
+    public SrtItem(String str) {
+        Pattern compile = Pattern.compile(REGEX);
+        Matcher matcher = compile.matcher(str);
+
+        if (matcher.find()) {
+            order = Integer.parseInt(matcher.group(1));
+            String startsAt = matcher.group(2);
+            String endsAt = matcher.group(3);
+            timeMarker = new TimeMarker()
+                    .startsAt(startsAt)
+                    .endsAt(endsAt);
+            text = matcher.group(4);
+        }
+    }
 
 
     public SrtItem shiftForwardBy(int amount, ChronoUnit unit) {
@@ -69,52 +88,6 @@ public class SrtItem implements Comparable<SrtItem> {
     @Override
     public int compareTo(SrtItem o) {
         return Comparator.comparing(SrtItem::getOrder).compare(this, o);
-    }
-
-
-    public static void main(String[] args) {
-
-
-        String s = "1\n" +
-                "00:00:37,737 --> 00:00:40,296\n" +
-                "Technically, what happened wasn't my fault.\n" +
-                "\n" +
-                "2\n" +
-                "00:00:40,306 --> 00:00:41,464\n" +
-                "I'm a minor.";
-
-        Set<SrtItem> srtItems = fromString(s);
-        srtItems.forEach(System.out::println);
-
-    }
-
-    public static Set<SrtItem> fromString(final String s) {
-        final Pattern pattern = Pattern.compile(REGEX);
-        final Matcher matcher = pattern.matcher(s);
-        final Set<SrtItem> srtItems = new TreeSet<>();
-
-        while (matcher.find()) {
-            final String order = matcher.group(1);
-            final String startsAt = matcher.group(2);
-            final String endsAt = matcher.group(3);
-            final String text = matcher.group(4);
-            final SrtItem srtItem = create(order, startsAt, endsAt, text);
-            srtItems.add(srtItem);
-        }
-        return srtItems;
-    }
-
-    public static SrtItem create(final String order,
-                                 final String startsAt,
-                                 final String endsAt,
-                                 final String text) {
-        final SrtItem srtItem = new SrtItem();
-        srtItem.setOrder(Integer.parseInt(order));
-        srtItem.startsAt(startsAt);
-        srtItem.endsAt(endsAt);
-        srtItem.setText(text);
-        return srtItem;
-
     }
 
     public String getStartsAt() {

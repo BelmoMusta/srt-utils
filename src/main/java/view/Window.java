@@ -19,6 +19,7 @@ public class Window extends Application {
 
         FXMLLoader fxmlLoader = new FXMLLoader(loadFXMLFile());
         Scene scene = new Scene(fxmlLoader.load(), 800, 500);
+        primaryStage.setMaximized(true);
         primaryStage.setScene(scene);
 
         primaryStage.show();
