@@ -8,27 +8,16 @@ import java.util.TreeSet;
 import static model.SrtItem.REGEX;
 
 public class SrtItemReader {
-
-    public static Set<SrtItem> fromString(final String s) {
-        final RegexScanner regexScanner = new RegexScanner(s, REGEX);
-        final Set<SrtItem> srtItems = new TreeSet<>();
-        while (regexScanner.hasNext()) {
-            SrtItem srtItem = regexScanner.next(SrtItem.STRING_MAPPER);
-            srtItems.add(srtItem);
+    
+    public static Set<SrtItem> createItemsFromContent(String content) {
+        final Set<SrtItem> srtItemSet;
+        try (RegexScanner regexScanner = new RegexScanner(content, REGEX)) {
+            srtItemSet = new TreeSet<>();
+            while (regexScanner.hasNext()) {
+                final SrtItem srtItem = regexScanner.next(SrtItem.STRING_MAPPER);
+                srtItemSet.add(srtItem);
+            }
         }
-
-        return srtItems;
-    }
-
-    public static SrtItem create(final String order,
-                                 final String startsAt,
-                                 final String endsAt,
-                                 final String text) {
-        final SrtItem srtItem = new SrtItem();
-        srtItem.setOrder(Integer.parseInt(order));
-        srtItem.startsAt(startsAt);
-        srtItem.endsAt(endsAt);
-        srtItem.setText(text);
-        return srtItem;
+        return srtItemSet;
     }
 }

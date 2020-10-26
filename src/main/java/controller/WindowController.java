@@ -25,15 +25,12 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.SrtItem;
-import org.apache.commons.io.FileUtils;
 import service.ExcelExporterService;
 import service.Extractor;
-import service.RegexScanner;
+import service.ImportTask;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,8 +40,6 @@ import java.util.TreeSet;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import static model.SrtItem.REGEX;
 
 public class WindowController implements Initializable {
 	@FXML
@@ -157,85 +152,51 @@ public class WindowController implements Initializable {
 		VBox unmodifiableRightSide = new VBox();
 		HBox hBox = new HBox(vBox, unmodifiableRightSide);
 		container.setCenter(hBox);
-		BooleanProperty visibleProperty = new SimpleBooleanProperty();
-		
+		final BooleanProperty visibleProperty = new SimpleBooleanProperty();
 		
 		load.setOnAction(event -> {
+			final FileChooser fileChooser = new FileChooser();
+			final File file = fileChooser.showOpenDialog(null);
+			final Task<Set<SrtItem>> task = new ImportTask(file, visibleProperty);
 			
-			FileChooser fileChooser = new FileChooser();
-			File file = fileChooser.showOpenDialog(null);
-			
-			final Task<Set<SrtItem>> task = new Task<Set<SrtItem>>() {
-				
-				@Override
-				protected Set<SrtItem> call() throws Exception {
-					final String s = loadFile(file);
-					visibleProperty.set(true);
-					final Set<SrtItem> srtItemSet;
-					try (RegexScanner regexScanner = new RegexScanner(s, REGEX)) {
-						srtItemSet = new TreeSet<>();
-						while (regexScanner.hasNext()) {
-							final SrtItem srtItem = regexScanner.next(SrtItem.STRING_MAPPER);
-							srtItemSet.add(srtItem);
-							progressProperty().add(0.01);
-						}
-					}
-					
-					return srtItemSet;
-				}
-			};
-			task.setOnFailed(ev -> {
-				throw new IllegalStateException(task.getException());
-			});
 			task.setOnSucceeded(ev -> {
 				try {
 					srtItems = task.get();
-					final TextArea rightText = new TextArea();
-					final TextArea leftText = new TextArea();
-					rightText.scrollLeftProperty().bindBidirectional(leftText.scrollLeftProperty());
-					rightText.scrollTopProperty().bindBidirectional(leftText.scrollTopProperty());
-					rightText.fontProperty().bindBidirectional(observableFont);
-					leftText.fontProperty().bindBidirectional(observableFont);
-					final SimpleStringProperty rightTextProperty = new SimpleStringProperty("");
-					final SimpleStringProperty leftTextProperty = new SimpleStringProperty("");
-					rightText.textProperty().bindBidirectional(rightTextProperty);
-					leftText.textProperty().bindBidirectional(leftTextProperty);
-					
-					grid.add(rightText, 0, 0);
-					grid.add(leftText, 1, 0);
-					
-					for (SrtItem srtItem : srtItems) {
-						String old = rightTextProperty.get();
-						if (!old.isEmpty()) {
-							old = old + '\n';
-						}
-						String value = old + srtItem;
-						rightTextProperty.setValue(value);
-						leftTextProperty.setValue(value);
-						
-						
-					}
+					fillUI();
 				} catch (InterruptedException | ExecutionException e) {
-				    System.exit(0);
+					System.exit(0);
 					throw new IllegalStateException(e);
 				}
-            });
+			});
 			
 			Platform.runLater(task);
-			
 		});
 	}
 	
-	
-	private String loadFile(File file) {
-		String fileRead = "";
-		if (file != null) {
-			try {
-				fileRead = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
-			} catch (IOException e) {
-				e.printStackTrace();
+	private void fillUI() {
+		final TextArea rightText = new TextArea();
+		final TextArea leftText = new TextArea();
+		final SimpleStringProperty rightTextProperty = new SimpleStringProperty("");
+		final SimpleStringProperty leftTextProperty = new SimpleStringProperty("");
+		
+		rightText.scrollLeftProperty().bindBidirectional(leftText.scrollLeftProperty());
+		rightText.scrollTopProperty().bindBidirectional(leftText.scrollTopProperty());
+		rightText.fontProperty().bindBidirectional(observableFont);
+		leftText.fontProperty().bindBidirectional(observableFont);
+		rightText.textProperty().bindBidirectional(rightTextProperty);
+		leftText.textProperty().bindBidirectional(leftTextProperty);
+		
+		grid.add(rightText, 0, 0);
+		grid.add(leftText, 1, 0);
+		
+		for (SrtItem srtItem : srtItems) {
+			String old = rightTextProperty.get();
+			if (!old.isEmpty()) {
+				old = old + '\n';
 			}
+			String value = old + srtItem;
+			rightTextProperty.setValue(value);
+			leftTextProperty.setValue(value);
 		}
-		return fileRead;
 	}
 }

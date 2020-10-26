@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="320.0" prefWidth="433.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ExcelToSRTController">
+    <children>
+        <Button fx:id="selectExcelFile" layoutX="359.0" layoutY="104.0" mnemonicParsing="false" text="..." />
+        <Button fx:id="selectSRTFile" layoutX="359.0" layoutY="156.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="24.0" text="..." />
+        <TextField fx:id="excelPath" layoutX="116.0" layoutY="104.0" prefHeight="26.0" prefWidth="238.0" />
+        <TextField fx:id="srtPath" layoutX="116.0" layoutY="157.0" prefHeight="26.0" prefWidth="238.0" />
+        <Label layoutX="55.0" layoutY="108.0" lineSpacing="10.0" text="Excel file" />
+        <Label layoutX="22.0" layoutY="160.0" text="SRT output file" />
+        <Button fx:id="convert" layoutX="199.0" layoutY="269.0" mnemonicParsing="false" text="Convert" />
+        <Label layoutX="138.0" layoutY="61.0" text="Convert an Excel file to srt file" />
+        <ChoiceBox fx:id="language" layoutX="116.0" layoutY="201.0" prefHeight="26.0" prefWidth="238.0" />
+        <Label layoutX="48.0" layoutY="206.0" text="Language" />
+    </children>
+</AnchorPane>
