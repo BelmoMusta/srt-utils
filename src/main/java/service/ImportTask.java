@@ -21,9 +21,15 @@ public class ImportTask extends Task<Set<SrtItem>> {
 		this.visibleProperty = visibleProperty;
 	}
 	
+	public ImportTask(File file) {
+		this(file, null);
+	}
+	
 	@Override
 	protected Set<SrtItem> call() {
-		visibleProperty.set(true);
+		if (visibleProperty != null) {
+			visibleProperty.set(true);
+		}
 		final String content = loadFile(file);
 		return SrtItemReader.createItemsFromContent(content);
 	}
