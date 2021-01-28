@@ -1,28 +1,19 @@
 package controller;
 
-import com.sun.javafx.collections.ImmutableObservableList;
+import io.github.belmomusta.excel.importexport.ExcelExporter;
+import io.github.belmomusta.excel.importexport.exception.ExcelExporterException;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import model.SrtItem;
-import service.ExcelExporterService;
-import service.ExcelImporterService;
-import service.Extractor;
 import service.ImportTask;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -52,23 +43,19 @@ public class SRTToExcelController implements Initializable {
 	
 	private void setupConvertButton() {
 		convert.setOnAction(event -> {
-			ExcelExporterService<SrtItem> excelExporterService = new ExcelExporterService<>();
-			
 			final Task<Set<SrtItem>> task = new ImportTask(srtFile);
 			task.setOnSucceeded(ev -> {
 				try {
 					Set<SrtItem> srtItems = task.get();
-					final Map<String, Extractor<SrtItem, String>> extractors = new LinkedHashMap<>();
-					extractors.put("Number", item -> String.valueOf(item.getOrder()));
-					extractors.put("Start", SrtItem::getStartsAt);
-					extractors.put("Ends", SrtItem::getEndsAt);
-					extractors.put("Content", SrtItem::getText);
-					extractors.put("FR", s -> "");
-					extractors.put("AR", s -> "");
-					extractors.put("DA", s -> "");
-					excelExporterService.export(srtItems, extractors, excelFile);
-					
-				} catch (InterruptedException | ExecutionException | IOException e) {
+					ExcelExporter.exportContent(srtItems)
+							.toFile(excelFile)
+							.withHeaders("Number", "Start", "Ends", "Content", "FR", "AR", "DA")
+							.mapMethod("getOrder").toCell(0)
+							.mapMethod("getStartsAt").toCell(1)
+							.mapMethod("getEndsAt").toCell(2)
+							.mapMethod("getText").toCell(3)
+							.export();
+				} catch (InterruptedException | ExecutionException  | ExcelExporterException e) {
 					System.exit(0);
 					throw new IllegalStateException(e);
 				}

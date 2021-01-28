@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="320.0" prefWidth="433.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SRTDelayerController">
+    <children>
+        <Button fx:id="selectOutputFile" layoutX="357.0" layoutY="160.0" mnemonicParsing="false" text="..." />
+        <Button fx:id="selectSRTFile" layoutX="356.0" layoutY="121.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="24.0" text="..." />
+        <TextField fx:id="excelPath" layoutX="114.0" layoutY="160.0" prefHeight="26.0" prefWidth="238.0" />
+        <TextField fx:id="srtPath" layoutX="113.0" layoutY="122.0" prefHeight="26.0" prefWidth="238.0" />
+        <Label layoutX="53.0" layoutY="164.0" lineSpacing="10.0" text="Output file" />
+        <Label layoutX="56.0" layoutY="126.0" text="SRT file" />
+        <Button fx:id="delay" layoutX="209.0" layoutY="251.0" mnemonicParsing="false" text="Delay" />
+        <Label layoutX="179.0" layoutY="83.0" text="Delay SRT File" />
+      <TextField fx:id="instant" layoutX="158.0" layoutY="200.0" />
+    </children>
+</AnchorPane>

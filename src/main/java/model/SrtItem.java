@@ -3,6 +3,7 @@ package model;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Duration;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
@@ -112,5 +113,21 @@ public class SrtItem implements Comparable<SrtItem> {
 	
 	public String setText(String language, String text) {
 		return translations.putIfAbsent(language, text);
+	}
+	
+	public void delay(String instant) {
+		int revese = 1;
+		if (instant.startsWith("-")) {
+			instant = instant.substring(1);
+			revese = -1;
+		}
+		LocalTime localTime = LocalTime.parse(instant, StaticHolder.getFormatter());
+		
+		Duration duration = Duration.ofHours(revese * localTime.getHour())
+				.plusMinutes(revese * localTime.getMinute())
+				.plusSeconds(revese * localTime.getSecond())
+				.plusMillis(revese * localTime.getNano() / 1000000);
+		timeMarker.delay(duration);
+		
 	}
 }

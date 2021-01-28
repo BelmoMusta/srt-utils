@@ -3,6 +3,7 @@ package model;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Duration;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
@@ -47,6 +48,11 @@ public class TimeMarker {
     public TimeMarker shiftBackwardsBy(int amount) {
         return shiftForwardBy(-amount, ChronoUnit.MILLIS);
     }
-
-
+    
+    
+    public void delay(Duration duration) {
+        startsAt = startsAt.plus(duration);
+        endsAt = endsAt.plus(duration);
+        
+    }
 }
