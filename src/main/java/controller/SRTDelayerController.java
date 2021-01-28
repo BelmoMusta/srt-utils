@@ -83,16 +83,9 @@ public class SRTDelayerController implements Initializable {
 				try {
 					Set<SrtItem> srtItems = task.get();
 					Writers.writeCollectionToFile(srtItems, excelFile);
-					Dialog successAlert  = new Alert(Alert.AlertType.CONFIRMATION);
+					Dialog successAlert = new Alert(Alert.AlertType.CONFIRMATION);
 					successAlert.setContentText("Srt delayed file exported at  " + excelFile.getAbsolutePath());
 					successAlert.showAndWait();
-					Timer timer = new Timer();
-					timer.schedule(new TimerTask() {
-						@Override
-						public void run() {
-							successAlert.close();;
-						}
-					}, 5000);
 				} catch (InterruptedException | ExecutionException | IOException e) {
 					System.exit(0);
 					throw new IllegalStateException(e);
